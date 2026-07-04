@@ -1,5 +1,7 @@
+const otpService = require("./otpService");
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/UserRepository");
+const otpRepository = require("../repositories/OtpRepository");
 
 class AuthService {
     async register(userData) {
@@ -21,15 +23,27 @@ class AuthService {
             email,
             password: hashedPassword,
         });
+        // Send verification OTP
+        await otpService.sendVerificationOTP(user.email);
 
         return {
             success: true,
-            message: "User registered successfully",
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-            },
+            message: "Registration successful. Please verify your email.",
+        };
+    }
+    async verifyOTP(data) {
+
+        const { email, otp } = data;
+
+        await otpService.verifyOTP(email, otp);
+
+        await userRepository.verifyUser(email);
+
+        await otpRepository.deleteByEmail(email);
+
+        return {
+            success: true,
+            message: "Email verified successfully",
         };
     }
 }

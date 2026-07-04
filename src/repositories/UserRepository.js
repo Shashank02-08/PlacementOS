@@ -22,6 +22,13 @@ class UserRepository {
     async delete(id) {
         return await User.findByIdAndDelete(id);
     }
+    async verifyUser(email) {
+        return await User.findOneAndUpdate(
+            { email },
+            { isVerified: true },
+            { new: true }
+        );
+    }
 }
 
 module.exports = new UserRepository();
