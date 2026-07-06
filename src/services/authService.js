@@ -2,6 +2,7 @@ const otpService = require("./otpService");
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/UserRepository");
 const otpRepository = require("../repositories/OtpRepository");
+const { generateToken } = require("../utils/jwt");
 
 class AuthService {
     async register(userData) {
@@ -44,6 +45,38 @@ class AuthService {
         return {
             success: true,
             message: "Email verified successfully",
+        };
+    }
+    async login(loginData) {
+
+        const { email, password } = loginData;
+
+        const user = await userRepository.findByEmail(email);
+
+        if (!user) {
+            throw new Error("Invalid email or password");
+        }
+
+        if (!user.isVerified) {
+            throw new Error("Please verify your email first");
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            throw new Error("Invalid email or password");
+        }
+
+        const token = generateToken(user);
+
+        return {
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
         };
     }
 }

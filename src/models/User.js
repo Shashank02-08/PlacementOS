@@ -38,6 +38,62 @@ const userSchema = new mongoose.Schema(
             enum: ["student", "admin", "recruiter"],
             default: "student",
         },
+        college: {
+            type: String,
+            default: ""
+        },
+
+        degree: {
+            type: String,
+            default: ""
+        },
+
+        branch: {
+            type: String,
+            default: ""
+        },
+
+        cgpa: {
+            type: Number
+        },
+
+        graduationYear: {
+            type: Number
+        },
+
+        skills: [{
+            type: String
+        }],
+
+        bio: {
+            type: String,
+            default: ""
+        },
+
+        github: {
+            type: String,
+            default: ""
+        },
+
+        linkedin: {
+            type: String,
+            default: ""
+        },
+
+        leetcode: {
+            type: String,
+            default: ""
+        },
+
+        resumeUrl: {
+            type: String,
+            default: ""
+        },
+
+        profileImage: {
+            type: String,
+            default: ""
+        }
     },
     {
         timestamps: true,

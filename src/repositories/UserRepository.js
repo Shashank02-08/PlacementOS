@@ -29,6 +29,19 @@ class UserRepository {
             { new: true }
         );
     }
+    async findById(id) {
+        return await User.findById(id).select("-password");
+    }
+    async updateById(id, updateData) {
+        return await User.findByIdAndUpdate(
+            id,
+            updateData,
+            {
+                returndocument: "after",
+                runValidators: true
+            }
+        ).select("-password");
+    }
 }
 
 module.exports = new UserRepository();
