@@ -21,8 +21,11 @@ const authenticate = (req, res, next) => {
             });
         }
 
-        // Extract token
+       // Extract token
         const token = authHeader.split(" ")[1];
+
+        console.log("TOKEN:", token);
+        console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -34,11 +37,13 @@ const authenticate = (req, res, next) => {
         next();
 
     } catch (error) {
-        return res.status(401).json({
-            success: false,
-            message: "Invalid or expired token"
-        });
-    }
+            console.log(error);
+
+            return res.status(401).json({
+                success: false,
+                message: "Invalid or expired token"
+            });
+        }
 };
 
 module.exports = authenticate;

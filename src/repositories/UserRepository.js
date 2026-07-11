@@ -9,10 +9,6 @@ class UserRepository {
         return await User.findOne({ email });
     }
 
-    async findById(id) {
-        return await User.findById(id);
-    }
-
     async update(id, data) {
         return await User.findByIdAndUpdate(id, data, {
             new: true,
@@ -37,7 +33,17 @@ class UserRepository {
             id,
             updateData,
             {
-                returndocument: "after",
+                returnDocument: "after",
+                runValidators: true
+            }
+        ).select("-password");
+    }
+    async updateRole(userId, role) {
+        return await User.findByIdAndUpdate(
+            userId,
+            { role },
+            {
+                returnDocument: "after",
                 runValidators: true
             }
         ).select("-password");
