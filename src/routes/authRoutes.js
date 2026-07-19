@@ -1,7 +1,7 @@
 console.log("✅ authRoutes loaded");
 const express = require("express");
 const router = express.Router();
-const { validateRegister } = require("../validators/authValidator");
+const { validateRegister } = require("../validations/authValidation");
 
 const authController = require("../controllers/authController");
 

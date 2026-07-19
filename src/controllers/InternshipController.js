@@ -33,12 +33,21 @@ class InternshipController {
 
         try {
 
-            const internships = await internshipService.getOpenInternships();
+            const result = await internshipService.getOpenInternships(req.query);
+
+            const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 10;
 
             return res.status(200).json({
                 success: true,
-                count: internships.length,
-                internships
+                page,
+                limit,
+                total: result.total,
+                totalPages: Math.ceil(result.total / limit),
+                hasNextPage: page < Math.ceil(result.total / limit),
+                hasPrevPage: page > 1,
+                count: result.internships.length,
+                internships: result.internships
             });
 
         } catch (error) {

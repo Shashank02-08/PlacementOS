@@ -1,0 +1,26 @@
+console.log("Upload middleware loaded");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        console.log("Saving file...");
+        console.log(file.originalname);
+        cb(null, "src/uploads/");
+    },
+
+    filename: (req, file, cb) => {
+        cb(
+            null,
+            Date.now() + "-" + file.originalname
+        );
+    }
+});
+
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024
+    }
+});
+
+module.exports = upload;

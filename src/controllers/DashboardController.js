@@ -1,31 +1,21 @@
 const dashboardService = require("../services/DashboardService");
+const asyncHandler = require("../utils/asyncHandler");
 
 class DashboardController {
 
-    async getStudentDashboard(req, res) {
+    getStudentDashboard = asyncHandler(async (req, res) => {
 
-        try {
+        const dashboard = await dashboardService.getStudentDashboard(
+            req.user.id,
+            req.user.role
+        );
 
-            const dashboard = await dashboardService.getStudentDashboard(
-                req.user.id,
-                req.user.role
-            );
+        return res.status(200).json({
+            success: true,
+            dashboard
+        });
 
-            return res.status(200).json({
-                success: true,
-                dashboard
-            });
-
-        } catch (error) {
-
-            return res.status(400).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
+    });
 
 }
 

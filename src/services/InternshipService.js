@@ -1,3 +1,4 @@
+const AppError = require("../errors/AppError");
 const internshipRepository = require("../repositories/InternshipRepository");
 const companyRepository = require("../repositories/CompanyRepository");
 
@@ -21,18 +22,23 @@ class InternshipService {
 
         return internship;
     }
-    async getOpenInternships() {
+    async getOpenInternships(queryParams) {
 
-        const internships = await internshipRepository.findOpenInternships();
+        const internships = await internshipRepository.findOpenInternships(queryParams);
 
-        return internships;
+        const total = await internshipRepository.countOpenInternships(queryParams);
+
+        return {
+            internships,
+            total
+        };
 
     }
     async getMyInternships(recruiterId, role) {
 
         // Only recruiters can access their dashboard
         if (role !== "recruiter") {
-            throw new Error("Only recruiters can view their internships.");
+            throw new AppError("Only recruiters can create internships.", 403);
         }
 
         const internships = await internshipRepository.findMyInternships(recruiterId);
@@ -43,13 +49,13 @@ class InternshipService {
     async updateInternship(internshipId, recruiterId, role, updateData) {
 
         if (role !== "recruiter") {
-            throw new Error("Only recruiters can update internships.");
+            throw new AppError("Only recruiters can update internships.", 403);
         }
 
         const internship = await internshipRepository.findById(internshipId);
 
         if (!internship) {
-            throw new Error("Internship not found.");
+            throw new AppError("Internship not found.", 404);
         }
         console.log("Internship:", internship);
         console.log("Recruiter field:", internship.recruiter);
@@ -60,7 +66,7 @@ class InternshipService {
         );
 
         if (internship.recruiter._id.toString() !== recruiterId) {
-            throw new Error("You can only update your own internships.");
+            throw new AppError("You can only update your own internships.", 403);
         }
 
         const allowedFields = [
