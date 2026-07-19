@@ -24,9 +24,6 @@ const authenticate = (req, res, next) => {
        // Extract token
         const token = authHeader.split(" ")[1];
 
-        console.log("TOKEN:", token);
-        console.log("JWT_SECRET:", process.env.JWT_SECRET);
-
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 

@@ -16,3 +16,8 @@ logs/
 npm-debug.log*
 
 uploads/
+
+src/uploads/*
+!src/uploads/.gitkeep
+
+scripts/

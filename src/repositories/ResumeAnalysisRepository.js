@@ -27,7 +27,7 @@ class ResumeAnalysisRepository {
             },
             updateData,
             {
-                new: true,
+                returnDocument: "after",
                 upsert: true,
                 runValidators: true
             }

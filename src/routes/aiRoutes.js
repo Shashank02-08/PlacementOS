@@ -4,7 +4,7 @@ const router = express.Router();
 
 const aiController = require("../controllers/AIController");
 const upload = require("../middlewares/uploadMiddleware");
-const authenticate = require("../middlewares/authmiddleware");
+const authenticate = require("../middlewares/authMiddleware");
 
 router.post(
     "/analyze-resume",

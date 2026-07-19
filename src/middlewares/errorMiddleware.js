@@ -1,12 +1,33 @@
-const errorMiddleware = (err, req, res, next) => {
+const multer = require("multer");
 
-    const statusCode = err.statusCode || 500;
+const errorMiddleware = (error, req, res, next) => {
 
-    return res.status(statusCode).json({
+    if (error instanceof multer.MulterError) {
+
+        if (error.code === "LIMIT_FILE_SIZE") {
+            return res.status(400).json({
+                success: false,
+                message: "Resume file must be smaller than 5 MB."
+            });
+        }
+
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+
+    if (error.message === "Only PDF resume files are allowed.") {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+
+    return res.status(500).json({
         success: false,
-        message: err.message || "Internal Server Error"
+        message: error.message || "Internal server error."
     });
-
 };
 
 module.exports = errorMiddleware;

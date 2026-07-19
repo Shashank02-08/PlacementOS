@@ -1,3 +1,5 @@
+const fs = require("fs/promises");
+
 const aiEngine = require("../ai/AIEngine");
 const resumeAnalysisService = require("../services/ResumeAnalysisService");
 
@@ -14,14 +16,11 @@ class AIController {
                 });
             }
 
-            // Student identity added by authMiddleware
             const studentId = req.user.id;
 
-            // Extract text and analyze resume in one operation
             const { resumeText, analysis } =
                 await aiEngine.analyzeResume(req.file.path);
 
-            // Save the student's resume analysis
             const savedAnalysis = await resumeAnalysisService.save(
                 studentId,
                 {
@@ -46,7 +45,23 @@ class AIController {
             });
 
         } catch (error) {
+
             next(error);
+
+        } finally {
+
+            if (req.file?.path) {
+                try {
+                    await fs.unlink(req.file.path);
+                    console.log("Temporary resume deleted.");
+                } catch (cleanupError) {
+                    console.error(
+                        "Failed to delete temporary resume:",
+                        cleanupError.message
+                    );
+                }
+            }
+
         }
 
     }

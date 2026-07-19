@@ -25,8 +25,7 @@ class AIResponseParser {
         try {
             return JSON.parse(cleaned);
         } catch (error) {
-            console.error("JSON Parse Error:", error.message);
-            throw new Error("AI returned invalid JSON.");
+            throw new Error(`AI returned invalid JSON: ${error.message}`);
         }
 
     }

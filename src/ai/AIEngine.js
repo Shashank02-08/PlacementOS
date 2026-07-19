@@ -1,6 +1,7 @@
 const geminiProvider = require("./providers/GeminiProvider");
 const PromptTemplates = require("./PromptTemplates");
 const pdfExtractor = require("./extractors/PdfExtractor");
+const AIResponseParser = require("./parsers/AIResponseParser");
 
 class AIEngine {
 
@@ -23,21 +24,9 @@ class AIEngine {
         const response =
             await geminiProvider.generate(prompt);
 
-        // Step 4: Parse JSON
-        let analysis;
-
-        try {
-
-            analysis = JSON.parse(response);
-
-        } catch (error) {
-
-            throw new Error(
-                "Failed to parse AI response."
-            );
-
-        }
-
+        // Step 4: Parse AI response
+        const analysis = AIResponseParser.parse(response);
+        
         // Step 5: Return everything
         return {
 
